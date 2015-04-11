@@ -22,6 +22,18 @@ var sass = require('gulp-sass');
 
 var prod = $.util.env.prod;
 
+var path = {
+  SRC_CSS: 'client/src/styles/**.scss',
+  SRC_HTML: 'client/src/*.html',
+  ENTRY_POINT: 'client/src/scripts/app.jsx',
+  SRC_IMAGE: 'client/src/images/**/*',
+  DIST_CSS: 'client/dist/styles',
+  DIST_SCRIPT: 'client/dist/scripts',
+  DIST_HTML: 'client/dist',
+  DIST_IMAGE:'client/dist/images'
+}
+
+
 // gulp-plumber for error handling
 function onError() {
   /* jshint ignore:start */
@@ -56,9 +68,9 @@ function onError() {
 
 // Styles
 gulp.task('styles', function() {
-  gulp.src('client/src/styles/**.scss')
+  gulp.src([path.SRC_CSS])
   .pipe(sass())
-  .pipe(gulp.dest('client/dist/styles'))
+  .pipe(gulp.dest(path.DIST_CSS))
 });
 
 
@@ -68,7 +80,7 @@ gulp.task('scripts', function() {
   bundler = browserify({
     basedir: __dirname,
     noparse: ['react/addons', 'reflux', 'fastclick', 'react-router'],
-    entries: ['./client/src/scripts/app.jsx'],
+    entries: [path.ENTRY_POINT],
     transform: [reactify],
     extensions: ['.jsx'],
     debug: true,
@@ -86,7 +98,7 @@ gulp.task('scripts', function() {
       .on('error', onError)
       .pipe(source('app.js'))
       .pipe(prod ? $.streamify($.uglify()) : $.util.noop())
-      .pipe(gulp.dest('dist/scripts'))
+      .pipe(gulp.dest(path.DIST_SCRIPT))
       .pipe($.notify(function() {
           console.log('Bundling Complete - ' + (Date.now() - start) + 'ms');
       }));
@@ -100,22 +112,22 @@ gulp.task('scripts', function() {
 
 // HTML
 gulp.task('html', function() {
-  return gulp.src('src/*.html')
+  return gulp.src(path.SRC_HTML)
     .pipe($.useref())
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest(path.DIST_HTML))
     .pipe($.size());
 });
 
 
 // Images
 gulp.task('images', function() {
-  return gulp.src('client/src/images/**/*')
+  return gulp.src(path.SRC_IMAGE)
     .pipe($.cache($.imagemin({
       optimizationLevel: 3,
       progressive: true,
       interlaced: true
     })))
-    .pipe(gulp.dest('dist/images'))
+    .pipe(gulp.dest(path.DIST_IMAGE))
     .pipe($.size());
 });
 
@@ -133,7 +145,7 @@ gulp.task('serve', function() {
 
 // Clean
 gulp.task('clean', function(cb) {
-  del(['dist/styles', 'dist/scripts', 'dist/images'], cb);
+  del([path.DIST_CSS, path.DIST_SCRIPT, path.DIST_IMAGE], cb);
 });
 
 
@@ -143,7 +155,7 @@ gulp.task('default', ['clean', 'html', 'styles', 'scripts']);
 
 // Watch
 gulp.task('watch', ['html', 'styles', 'scripts', 'serve'], function() {
-  gulp.watch('src/*.html', ['html']);
-  gulp.watch('src/styles/**/*.scss', ['styles']);
-  gulp.watch('src/images/**/*', ['images']);
+  gulp.watch(path.SRC_HTML, ['html']);
+  gulp.watch(path.SRC_CSS, ['styles']);
+  gulp.watch(path.SRC_IMAGE, ['images']);
 });
