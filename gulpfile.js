@@ -6,6 +6,7 @@
 */
 
 var gulp       = require('gulp');
+var plumber = require('gulp-plumber');
 var del        = require('del');
 var path       = require('path');
 // Organizes your browser code and loads modules installed by npm
@@ -35,7 +36,7 @@ function onError() {
 
 // Styles
 gulp.task('styles', function() {
-  return gulp.src('src/styles/**/*')
+  return gulp.src('client/src/styles/*')
     .pipe($.plumber({
       errorHandler: onError
     }))
@@ -45,19 +46,20 @@ gulp.task('styles', function() {
       precision: 10,
       loadPath: ['src/bower_components']
     }))
-    .pipe($.autoprefixer('last 3 versions'))
-    .pipe(gulp.dest('dist/styles'))
-    .pipe($.size());
+    // .pipe($.autoprefixer('last 3 versions'))
+    // .pipe(gulp.dest('dist/styles'))
+    // .pipe($.size())
+    // .pipe(console.log('hello im done'));
 });
 
 
-// Scripts
+// Scripts ok
 gulp.task('scripts', function() {
   var bundler;
   bundler = browserify({
     basedir: __dirname,
     noparse: ['react/addons', 'reflux', 'fastclick', 'react-router'],
-    entries: ['./src/scripts/app.jsx'],
+    entries: ['./client/src/scripts/app.jsx'],
     transform: [reactify],
     extensions: ['.jsx'],
     debug: true,
@@ -98,7 +100,7 @@ gulp.task('html', function() {
 
 // Images
 gulp.task('images', function() {
-  return gulp.src('src/images/**/*')
+  return gulp.src('client/src/images/**/*')
     .pipe($.cache($.imagemin({
       optimizationLevel: 3,
       progressive: true,
@@ -111,11 +113,11 @@ gulp.task('images', function() {
 
 // Webserver
 gulp.task('serve', function() {
-  gulp.src('dist')
+  gulp.src('client/dist')
     .pipe($.webserver({
       livereload: true,
       port: 9000,
-      fallback: 'index.html'
+      fallback: 'client/index.html'
     }));
 });
 
