@@ -2,7 +2,7 @@
 /**
 @fileOverview 
 <p>Gulp file will handle remedial tasks for day to day options</p>
-@author Jason Chang
+@author Benevolent-Nautilus
 */
 
 var gulp = require('gulp');
@@ -62,12 +62,6 @@ gulp.task('styles', function() {
   .pipe(gulp.dest('client/dist/styles'))
 });
 
-// // Styles
-// gulp.task('styles', function() {
-//   gulp.src([path.SRC_CSS])
-//   .pipe(sass())
-//   .pipe(gulp.dest(path.DIST_CSS))
-// });
 
 
 // Scripts ok
