@@ -5,18 +5,20 @@
 @author Jason Chang
 */
 
-var gulp       = require('gulp');
+var gulp = require('gulp');
 var plumber = require('gulp-plumber');
-var del        = require('del');
-var path       = require('path');
+var del = require('del');
+var path = require('path');
 // Organizes your browser code and loads modules installed by npm
 var browserify = require('browserify');
 // Compiles ES6 to ES5
-var reactify   = require('reactify');
+var reactify = require('reactify');
 // Watches for changes in modules then rebuilds
-var watchify   = require('watchify');
-var source     = require('vinyl-source-stream');
-var $          = require('gulp-load-plugins')();
+var watchify = require('watchify');
+var source = require('vinyl-source-stream');
+var $ = require('gulp-load-plugins')();
+var sass = require('gulp-sass');
+
 
 var prod = $.util.env.prod;
 
@@ -34,22 +36,29 @@ function onError() {
 }
 
 
+// // Styles
+// gulp.task('styles', function() {
+//   return gulp.src('client/src/styles/*')
+//     .pipe($.plumber({
+//       errorHandler: onError
+//     }))
+//     .pipe($.concat('main.scss'))
+//     .pipe($.rubySass({
+//       style: 'compressed',
+//       precision: 10,
+//       loadPath: ['src/bower_components']
+//     }))
+//     .pipe($.autoprefixer('last 3 versions'))
+//     .pipe(gulp.dest('dist/styles'))
+//     .pipe($.size())
+//     .pipe(console.log('hello im done'))
+// });
+
 // Styles
 gulp.task('styles', function() {
-  return gulp.src('client/src/styles/*')
-    .pipe($.plumber({
-      errorHandler: onError
-    }))
-    .pipe($.concat('main.scss'))
-    .pipe($.rubySass({
-      style: 'compressed',
-      precision: 10,
-      loadPath: ['src/bower_components']
-    }))
-    // .pipe($.autoprefixer('last 3 versions'))
-    // .pipe(gulp.dest('dist/styles'))
-    // .pipe($.size())
-    // .pipe(console.log('hello im done'));
+  gulp.src('client/src/styles/**.scss')
+  .pipe(sass())
+  .pipe(gulp.dest('client/dist/styles'))
 });
 
 
