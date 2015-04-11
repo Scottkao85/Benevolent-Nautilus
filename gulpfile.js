@@ -23,14 +23,16 @@ var sass = require('gulp-sass');
 var prod = $.util.env.prod;
 
 var path = {
-  SRC_CSS: 'client/src/styles/**.scss',
+  SRC_SCSS: 'client/src/styles/**/*.scss',
   SRC_HTML: 'client/src/*.html',
   SRC_IMAGE: 'client/src/images/**/*',
   ENTRY_POINT: 'client/src/scripts/app.jsx',
   DIST_CSS: 'client/dist/styles',
   DIST_SCRIPT: 'client/dist/scripts',
   DIST_HTML: 'client/dist',
-  DIST_IMAGE:'client/dist/images'
+  DIST_IMAGE:'client/dist/images',
+  CLIENT_INDEX: 'client/index.html'
+
 }
 
 
@@ -50,7 +52,7 @@ function onError() {
 
 // Styles
 gulp.task('styles', function() {
-  gulp.src('client/src/styles/**/*.scss')
+  gulp.src(SRC_SCSS)
   .pipe(sass({
     outputStyle: 'compressed',
     sourceComments: 'map',
@@ -59,7 +61,7 @@ gulp.task('styles', function() {
   .on('error', function(error){
     displayError(error);  
   })
-  .pipe(gulp.dest('client/dist/styles'))
+  .pipe(gulp.dest(DIST_CSS))
 });
 
 
@@ -128,7 +130,7 @@ gulp.task('serve', function() {
     .pipe($.webserver({
       livereload: true,
       port: 9000,
-      fallback: 'client/index.html'
+      fallback: CLIENT_INDEX
     }));
 });
 
@@ -146,6 +148,6 @@ gulp.task('default', ['clean', 'html', 'styles', 'scripts']);
 // Watch
 gulp.task('watch', ['html', 'styles', 'scripts', 'serve'], function() {
   gulp.watch(path.SRC_HTML, ['html']);
-  gulp.watch(path.SRC_CSS, ['styles']);
+  gulp.watch(path.SRC_SCSS, ['styles']);
   gulp.watch(path.SRC_IMAGE, ['images']);
 });
