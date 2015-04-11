@@ -25,8 +25,8 @@ var prod = $.util.env.prod;
 var path = {
   SRC_CSS: 'client/src/styles/**.scss',
   SRC_HTML: 'client/src/*.html',
-  ENTRY_POINT: 'client/src/scripts/app.jsx',
   SRC_IMAGE: 'client/src/images/**/*',
+  ENTRY_POINT: 'client/src/scripts/app.jsx',
   DIST_CSS: 'client/dist/styles',
   DIST_SCRIPT: 'client/dist/scripts',
   DIST_HTML: 'client/dist',
@@ -48,30 +48,26 @@ function onError() {
 }
 
 
-// // Styles
-// gulp.task('styles', function() {
-//   return gulp.src('client/src/styles/*')
-//     .pipe($.plumber({
-//       errorHandler: onError
-//     }))
-//     .pipe($.concat('main.scss'))
-//     .pipe($.rubySass({
-//       style: 'compressed',
-//       precision: 10,
-//       loadPath: ['src/bower_components']
-//     }))
-//     .pipe($.autoprefixer('last 3 versions'))
-//     .pipe(gulp.dest('dist/styles'))
-//     .pipe($.size())
-//     .pipe(console.log('hello im done'))
-// });
-
 // Styles
 gulp.task('styles', function() {
-  gulp.src([path.SRC_CSS])
-  .pipe(sass())
-  .pipe(gulp.dest(path.DIST_CSS))
+  gulp.src('client/src/styles/**/*.scss')
+  .pipe(sass({
+    outputStyle: 'compressed',
+    sourceComments: 'map',
+    includePaths: 'client/src/styles'
+  }))
+  .on('error', function(error){
+    displayError(error);  
+  })
+  .pipe(gulp.dest('client/dist/styles'))
 });
+
+// // Styles
+// gulp.task('styles', function() {
+//   gulp.src([path.SRC_CSS])
+//   .pipe(sass())
+//   .pipe(gulp.dest(path.DIST_CSS))
+// });
 
 
 // Scripts ok
